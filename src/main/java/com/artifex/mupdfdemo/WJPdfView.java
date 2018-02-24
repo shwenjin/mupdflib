@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +25,6 @@ import android.widget.Toast;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Progress;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 
@@ -37,9 +39,10 @@ import io.reactivex.functions.Predicate;
 public class WJPdfView extends FrameLayout implements View.OnClickListener{
     private final String TAG=WJPdfView.class.getSimpleName();
     FrameLayout mFrameLayout;
+    LinearLayout mLinearProgress;
     TextView mTxtPage;
     ImageView mImageEntireScreen;
-    ProgressBar mProgressBar;
+    SpringProgressView mProgressBar;
     private OnPdfListener mOnPdfListener;
     private Context mContext;
     private boolean isDestroyed=false;
@@ -60,7 +63,6 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     private int mHistoryPosition=0;
     private boolean isStop=false;
     private String mFolder;
-    private RxPermissions mRxPermissions;
     private Disposable mDisposable;
     private String mUrl;
     public WJPdfView(Context context) {
@@ -81,12 +83,12 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     private void init(Context context){
         View.inflate(context, R.layout.ecache_mypdfview,this);
         mFrameLayout=findViewById(R.id.frame_content);
+        mLinearProgress=findViewById(R.id.linear_progress);
         mTxtPage=findViewById(R.id.txt_page);
         mImageEntireScreen=findViewById(R.id.image_entire_screen);
-        mProgressBar=findViewById(R.id.progress);
+        mProgressBar=findViewById(R.id.spring_progress);
         mImageEntireScreen.setOnClickListener(this);
         this.mContext=context;
-        mRxPermissions=new RxPermissions((Activity) mContext);
     }
 
     @Override
@@ -121,6 +123,7 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     public void openPDF(String path,int position){
         this.mUrl=path;
         this.mHistoryPosition=position;
+        mLinearProgress.setVisibility(View.VISIBLE);
         if(TextUtils.isEmpty(mUrl)){
             throw new NullPointerException();
         }
@@ -134,37 +137,50 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
                 if(!file.exists()){
                     checkPermission();
                 }else{
-                    mProgressBar.setVisibility(View.GONE);
+                    mLinearProgress.setVisibility(View.GONE);
                     initCore(temp);
                 }
             }
         }else{
-            mProgressBar.setVisibility(View.GONE);
+            mLinearProgress.setVisibility(View.GONE);
             initCore(mUrl);
         }
     }
 
     private void checkPermission(){
-        mDisposable=mRxPermissions
-                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .filter(new Predicate<Boolean>() {
-                    @Override
-                    public boolean test(Boolean granted) throws Exception {
-                        if(!granted){//权限被拒绝
-                            Toast.makeText(mContext,"权限被禁止，无法打开此资料！",Toast.LENGTH_LONG).show();
-                            return false;
-                        }
-                        return true;
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
-                        download();
-                    }
-                })
-                .subscribe();
+        if(ContextCompat.checkSelfPermission(mContext,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+            downloadTest();
+        }else{
+            Toast.makeText(mContext,"request permission filed!",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void downloadTest(){
+        DBUtils.getInstance(mContext).addCacheURL(mUrl);
+        HttpUtils httpUtils=HttpUtils.getInstance();
+        httpUtils.createUrl(mUrl);
+        httpUtils.download();
+        httpUtils.setHttpDownloadListener(new HttpUtils.HttpDownloadListener() {
+            @Override
+            public void updateProgress(long currentSize, long totalSize) {
+                mProgressBar.setMaxCount(totalSize);
+                mProgressBar.setCurrentCount(currentSize);
+            }
+
+            @Override
+            public void onSuccess(String path) {
+                Log.d("tag","下载成功："+path);
+                DBUtils.getInstance(mContext).updateCacheURL(mUrl,path);
+                mLinearProgress.setVisibility(View.GONE);
+                initCore(path);
+            }
+
+            @Override
+            public void onFailure() {
+                Log.d("tag","下载失败");
+            }
+        });
     }
 
     private void download(){

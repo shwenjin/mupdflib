@@ -17,12 +17,11 @@
         <TextView
             android:id="@+id/txt_page"
             android:layout_width="wrap_content"
-            android:textColor="#ffffff"
+            android:textColor="#cccccc"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:gravity="center"
             android:textStyle="bold"
-            android:background="@drawable/ecache_video_seekbar_bg"
             android:layout_height="match_parent"
             android:text="0/0"/>
         <ImageView
@@ -36,9 +35,22 @@
             android:adjustViewBounds="true"
             android:src="@drawable/entire_screen_launches"/>
     </RelativeLayout>
-    <ProgressBar
-        android:id="@+id/progress"
+
+    <LinearLayout
+        android:id="@+id/linear_progress"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_height="wrap_content">
+        <com.artifex.mupdfdemo.SpringProgressView
+            android:id="@+id/spring_progress"
+            android:layout_width="250dp"
+            android:layout_height="10dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#cccccc"
+            android:text="正在加载中..."/>
+    </LinearLayout>
 </FrameLayout>
