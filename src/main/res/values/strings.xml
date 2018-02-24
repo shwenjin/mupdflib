@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Mupdflib</string>
+    <string name="cannot_open_file_Path">无法打开文件：%1$s</string>
+    <string name="cannot_open_buffer">无法打开缓冲器</string>
+    <string name="fill_out_text_field">填充文本字段</string>
+    <string name="cancel">取消</string>
+    <string name="okay">确定</string>
+    <string name="choose_value">选择值</string>
+    <string name="not_supported">不被支持</string>
+    <string name="searching_">正在搜索…</string>
+    <string name="text_not_found">未发现文本</string>
+    <string name="dismiss">解除</string>
+    <string name="no_further_occurrences_found">未发现更多实例。</string>
+    <string name="cannot_open_document">无法打开文档</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+</resources>
