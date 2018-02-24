@@ -21,17 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.FileCallback;
-import com.lzy.okgo.model.Progress;
-
 import java.io.File;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 
 /**
  * Created by wenjin on 2018/1/19.
@@ -63,7 +53,6 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     private int mHistoryPosition=0;
     private boolean isStop=false;
     private String mFolder;
-    private Disposable mDisposable;
     private String mUrl;
     public WJPdfView(Context context) {
         super(context);
@@ -150,13 +139,13 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     private void checkPermission(){
         if(ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
-            downloadTest();
+            download();
         }else{
             Toast.makeText(mContext,"request permission filed!",Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void downloadTest(){
+    private void download(){
         DBUtils.getInstance(mContext).addCacheURL(mUrl);
         HttpUtils httpUtils=HttpUtils.getInstance();
         httpUtils.createUrl(mUrl);
@@ -181,35 +170,6 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
                 Log.d("tag","下载失败");
             }
         });
-    }
-
-    private void download(){
-        if(TextUtils.isEmpty(mFolder)){
-            mFolder=Environment.getExternalStorageDirectory().getAbsolutePath()+"/mupdf/";
-        }
-        File file=new File(mFolder);
-        if(!file.exists()){
-            file.mkdirs();
-        }
-        DBUtils.getInstance(mContext).addCacheURL(mUrl);
-        String fileName=mUrl.substring(mUrl.lastIndexOf("/"),mUrl.length());
-        OkGo.<File>get(mUrl)
-                .execute(new FileCallback(mFolder,fileName){
-                    @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<File> response) {
-                        DBUtils.getInstance(mContext).updateCacheURL(mUrl,response.body().getAbsolutePath());
-                        String mPath=response.body().getAbsolutePath();
-                        mProgressBar.setVisibility(View.GONE);
-                        initCore(mPath);
-                    }
-
-                    @Override
-                    public void downloadProgress(Progress progress) {
-                        Log.d(TAG,(int) progress.currentSize+"/"+(int) progress.totalSize);
-//                        mProgressBar.setMax((int) progress.totalSize);
-//                        mProgressBar.setProgress((int) progress.currentSize);
-                    }
-                });
     }
 
     private void initCore(String mPath){
