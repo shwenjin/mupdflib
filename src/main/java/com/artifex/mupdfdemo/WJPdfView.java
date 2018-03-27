@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -472,6 +473,38 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
         if(core!=null){
             mDocView.setAdapter(new MuPDFPageAdapter(mContext, core));
             mDocView.setDisplayedViewIndex(mCurrentPage-1);
+        }
+    }
+
+    public void onConfigurationChanged(boolean isPortrait){
+        if (isPortrait) {
+            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));//设置显示的高度
+            requestLayout();
+            updateAdapter();
+        } else  {
+            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+            requestLayout();
+            updateAdapter();
+        }
+    }
+
+    public void onConfigurationChanged(boolean isPortrait,int height){
+        if (isPortrait) {
+            if(mDocView!=null) {
+                mDocView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));
+                mDocView.requestLayout();
+            }
+            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));//设置显示的高度
+            requestLayout();
+            updateAdapter();
+        } else  {
+            if(mDocView!=null) {
+                mDocView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+                mDocView.requestLayout();
+            }
+            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+            requestLayout();
+            updateAdapter();
         }
     }
 
