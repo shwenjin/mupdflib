@@ -659,7 +659,10 @@ public class ReaderView
 
 	@Override
 	public View getSelectedView() {
-		throw new UnsupportedOperationException(getContext().getString(R.string.not_supported));
+		//TODO: 2018/03/22 某些机型打开PDF会闪退
+		//TODO： 暂时解决方法：直接返回null
+		//throw new UnsupportedOperationException(getContext().getString(R.string.not_supported));
+		return null;
 	}
 
 	@Override

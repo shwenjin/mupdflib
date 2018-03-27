@@ -30,6 +30,8 @@ public class SpringProgressView extends View {
     private float currentCount;
     /**画笔*/
     private Paint mPaint;
+
+    private Paint mPaintText;
     private int mWidth,mHeight;
 
     public SpringProgressView(Context context, AttributeSet attrs,
@@ -54,6 +56,9 @@ public class SpringProgressView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        mPaintText=new Paint();
+        mPaintText.setAntiAlias(true);
+        mPaintText.setColor(Color.rgb(255, 0, 0));
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         int round = mHeight/2;
@@ -94,6 +99,11 @@ public class SpringProgressView extends View {
             mPaint.setShader(shader);
         }
         canvas.drawRoundRect(rectProgressBg, round, round, mPaint);
+        int temp= (int) (section*100);
+        String srtemp=temp+"%";
+        float left_txt=mPaint.measureText(srtemp);
+        float top_txt=round+rectProgressBg.height()/4;
+        canvas.drawText(srtemp,rectProgressBg.width()-left_txt, top_txt, mPaintText);
     }
 
     private int dipToPx(int dip) {
