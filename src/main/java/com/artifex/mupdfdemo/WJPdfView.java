@@ -494,14 +494,14 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     public void onConfigurationChanged(boolean isPortrait,int height){
        if (isPortrait) {
             if(mDocView!=null) {
-                mDocView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+                mDocView.setLayoutParams(new ViewGroup.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));
                 mDocView.requestLayout();
             }
             requestLayout();
             updateAdapter();
         } else  {
             if(mDocView!=null) {
-                mDocView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                mDocView.setLayoutParams(new ViewGroup.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
                 mDocView.requestLayout();
             }
             requestLayout();
