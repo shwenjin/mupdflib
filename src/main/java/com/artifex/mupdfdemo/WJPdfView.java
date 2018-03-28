@@ -303,6 +303,7 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
             return;
         isOpen.set(false);
         mImageEntireScreen.setVisibility(VISIBLE);
+        onStart();
     }
 
     private void createAlertWaiter() {
