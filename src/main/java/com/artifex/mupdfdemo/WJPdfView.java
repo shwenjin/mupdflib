@@ -60,6 +60,7 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     private boolean isStop=false;
     private String mFolder;
     private String mUrl;
+    private boolean isRead=false;
     private AtomicBoolean isOpen = new AtomicBoolean(false);
     public WJPdfView(Context context) {
         super(context);
@@ -125,6 +126,7 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     public void openPDF(String path,int position){
         this.mUrl=path;
         this.mHistoryPosition=position;
+        isRead=false;
         isOpen.set(true);
         mImageEntireScreen.setVisibility(GONE);
         mLinearProgress.setVisibility(View.VISIBLE);
@@ -254,7 +256,16 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
                 mMaxPage=core.countPages();
                 mCurrentPage=i + 1;
                 if(core.countPages()==(mCurrentPage)){
-                    mOnPdfListener.onCompletion();
+                    if(mOnPdfListener!=null){
+                        mOnPdfListener.onCompletion();
+                    }
+                }
+                float  count=(core.countPages()*0.9f);
+                if((count<=mCurrentPage)&&(!isRead)){
+                    isRead=true;
+                    if(mOnPdfListener!=null){
+                        mOnPdfListener.onFinishRate90();
+                    }
                 }
                 super.onMoveToChild(i);
             }
@@ -492,7 +503,7 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     }
 
     public void onConfigurationChanged(boolean isPortrait,int height){
-       if (isPortrait) {
+        if (isPortrait) {
             if(mDocView!=null) {
                 mDocView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));
                 mDocView.requestLayout();
@@ -541,6 +552,7 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     public interface OnPdfListener{
         public void finish();
         public void onCompletion();
+        public void onFinishRate90();
         public void toggleScreen();
         public void onstart();
     }
