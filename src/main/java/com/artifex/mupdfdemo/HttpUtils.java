@@ -4,12 +4,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,7 +28,7 @@ public class HttpUtils {
     private HttpDownloadListener httpDownloadListener;
     private ExecutorService executorService=Executors.newFixedThreadPool(1);
     private HttpUtils(){
-        folder=Environment.getExternalStorageDirectory() + "/mupdf" ;
+        folder=Environment.getExternalStorageDirectory() + "/mupdf/" ;
     }
     public static synchronized HttpUtils getInstance(){
         if(instance==null){
@@ -69,9 +71,11 @@ public class HttpUtils {
                     //不存在，创建此文件
                     fileUtil.createDir(folder);
                 }
+                String srtname = fileUtil.getFileName(url);
+                url=url.substring(0,url.lastIndexOf("/"))+"/"+ URLEncoder.encode(srtname,"utf-8");
                 HttpURLConnection urlConn = (HttpURLConnection) new URL(url).openConnection();
                 input = urlConn.getInputStream();
-                File resultFile = fileUtil.write2SDFromInput(folder,fileUtil.getFileName(url),input,urlConn.getContentLength());
+                File resultFile = fileUtil.write2SDFromInput(folder,srtname,input,urlConn.getContentLength());
                 if (resultFile != null) {
                     //下载成功
                     Message message=new Message();

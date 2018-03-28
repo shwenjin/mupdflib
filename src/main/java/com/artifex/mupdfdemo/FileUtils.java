@@ -107,6 +107,6 @@ public class FileUtils {
      * @return
      */
     public String getFileName(String url){
-        return url.substring(url.lastIndexOf("/"),url.length());
+        return url.substring(url.lastIndexOf("/")+1,url.length());
     }
 }
