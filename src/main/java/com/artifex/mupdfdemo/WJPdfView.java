@@ -490,20 +490,32 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     }
 
     public void onConfigurationChanged(boolean isPortrait,int height){
-        if (isPortrait) {
+       if (isPortrait) {
             if(mDocView!=null) {
-                mDocView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));
+                mDocView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
                 mDocView.requestLayout();
             }
-            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));//设置显示的高度
+            if(getLayoutParams() instanceof LinearLayout.LayoutParams){
+                setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height));//设置显示的高度
+            }else if(getLayoutParams() instanceof RelativeLayout.LayoutParams){
+                setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height));//设置显示的高度
+            }else if(getLayoutParams() instanceof FrameLayout.LayoutParams){
+                setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));//设置显示的高度
+            }
             requestLayout();
             updateAdapter();
         } else  {
             if(mDocView!=null) {
-                mDocView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+                mDocView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 mDocView.requestLayout();
             }
-            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+            if(getLayoutParams() instanceof LinearLayout.LayoutParams){
+                setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));//设置显示的高度
+            }else if(getLayoutParams() instanceof RelativeLayout.LayoutParams){
+                setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));//设置显示的高度
+            }else if(getLayoutParams() instanceof FrameLayout.LayoutParams){
+                setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));//设置显示的高度
+            }
             requestLayout();
             updateAdapter();
         }
