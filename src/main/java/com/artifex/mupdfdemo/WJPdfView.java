@@ -15,12 +15,14 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
@@ -479,11 +481,11 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
 
     public void onConfigurationChanged(boolean isPortrait){
         if (isPortrait) {
-            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));//设置显示的高度
+            setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));//设置显示的高度
             requestLayout();
             updateAdapter();
         } else  {
-            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+            setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             requestLayout();
             updateAdapter();
         }
@@ -492,18 +494,30 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     public void onConfigurationChanged(boolean isPortrait,int height){
         if (isPortrait) {
             if(mDocView!=null) {
-                mDocView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));
+                mDocView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
                 mDocView.requestLayout();
             }
-            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));//设置显示的高度
+            if(getLayoutParams() instanceof LinearLayout.LayoutParams){
+                setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height));//设置显示的高度
+            }else if(getLayoutParams() instanceof RelativeLayout.LayoutParams){
+                setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height));//设置显示的高度
+            }else if(getLayoutParams() instanceof FrameLayout.LayoutParams){
+                setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, height));//设置显示的高度
+            }
             requestLayout();
             updateAdapter();
         } else  {
             if(mDocView!=null) {
-                mDocView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+                mDocView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 mDocView.requestLayout();
             }
-            setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+            if(getLayoutParams() instanceof LinearLayout.LayoutParams){
+                setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));//设置显示的高度
+            }else if(getLayoutParams() instanceof RelativeLayout.LayoutParams){
+                setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));//设置显示的高度
+            }else if(getLayoutParams() instanceof FrameLayout.LayoutParams){
+                setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));//设置显示的高度
+            }
             requestLayout();
             updateAdapter();
         }
