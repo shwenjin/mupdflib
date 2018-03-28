@@ -525,7 +525,7 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
     }
 
     public void onStart(){
-        if(isStop&&mOnPdfListener!=null){
+        if(mOnPdfListener!=null){
             mOnPdfListener.onstart();
         }
     }
