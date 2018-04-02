@@ -72,7 +72,7 @@ public class HttpUtils {
                     fileUtil.createDir(folder);
                 }
                 String srtname = fileUtil.getFileName(url);
-                url=url.substring(0,url.lastIndexOf("/"))+"/"+ URLEncoder.encode(srtname,"utf-8");
+                url=url.substring(0,url.lastIndexOf("/"))+"/"+ URLEncoder.encode(srtname,"utf-8").replace("+","%20");
                 HttpURLConnection urlConn = (HttpURLConnection) new URL(url).openConnection();
                 input = urlConn.getInputStream();
                 File resultFile = fileUtil.write2SDFromInput(folder,srtname,input,urlConn.getContentLength());
