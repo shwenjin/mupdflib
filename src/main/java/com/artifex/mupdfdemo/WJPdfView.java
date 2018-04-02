@@ -91,6 +91,11 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
         mAlertBuilder = new AlertDialog.Builder(mContext);
     }
 
+    public void setProgressVisibility(int visibility){
+        mTxtSize.setVisibility(visibility);
+        mProgressBar.setVisibility(visibility);
+    }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
