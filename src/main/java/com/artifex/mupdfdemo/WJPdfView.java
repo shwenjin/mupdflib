@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -189,7 +190,7 @@ public class WJPdfView extends FrameLayout implements View.OnClickListener{
             public void updateProgress(long currentSize, long totalSize) {
                 mProgressBar.setMaxCount(totalSize);
                 mProgressBar.setCurrentCount(currentSize);
-                mTxtSize.setText((currentSize/1024/1024)+"/"+(totalSize/1024/1024)+"MB");
+                mTxtSize.setText(Formatter.formatFileSize(mContext, currentSize)+"/"+Formatter.formatFileSize(mContext, totalSize));
             }
 
             @Override
