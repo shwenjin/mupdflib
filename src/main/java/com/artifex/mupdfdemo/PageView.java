@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.jiajian.obor.R;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -414,7 +416,8 @@ public abstract class PageView extends ViewGroup {
 
 	public void deselectText() {
 		mSelectBox = null;
-		mSearchView.invalidate();
+		if (mSearchView!=null)
+			mSearchView.invalidate();
 	}
 
 	public void selectText(float x0, float y0, float x1, float y1) {
@@ -428,8 +431,8 @@ public abstract class PageView extends ViewGroup {
 			mSelectBox = new RectF(docRelX0, docRelY0, docRelX1, docRelY1);
 		else
 			mSelectBox = new RectF(docRelX1, docRelY1, docRelX0, docRelY0);
-
-		mSearchView.invalidate();
+		if(mSearchView!=null)
+			mSearchView.invalidate();
 
 		if (mGetText == null) {
 			mGetText = new AsyncTask<Void,Void,TextWord[][]>() {
@@ -440,7 +443,8 @@ public abstract class PageView extends ViewGroup {
 				@Override
 				protected void onPostExecute(TextWord[][] result) {
 					mText = result;
-					mSearchView.invalidate();
+					if(mSearchView!=null)
+						mSearchView.invalidate();
 				}
 			};
 
@@ -468,13 +472,15 @@ public abstract class PageView extends ViewGroup {
 		if (mDrawing != null && mDrawing.size() > 0) {
 			ArrayList<PointF> arc = mDrawing.get(mDrawing.size() - 1);
 			arc.add(new PointF(docRelX, docRelY));
-			mSearchView.invalidate();
+			if(mSearchView!=null)
+				mSearchView.invalidate();
 		}
 	}
 
 	public void cancelDraw() {
 		mDrawing = null;
-		mSearchView.invalidate();
+		if(mSearchView!=null)
+			mSearchView.invalidate();
 	}
 
 	protected PointF[][] getDraw() {
@@ -604,7 +610,9 @@ public abstract class PageView extends ViewGroup {
 				mPatch = new OpaqueImageView(mContext);
 				mPatch.setScaleType(ImageView.ScaleType.FIT_CENTER);
 				addView(mPatch);
-				mSearchView.bringToFront();
+				if(mSearchView!=null){
+					mSearchView.bringToFront();
+				}
 			}
 
 			mDrawPatch = new AsyncTask<PatchInfo,Void,PatchInfo>() {
