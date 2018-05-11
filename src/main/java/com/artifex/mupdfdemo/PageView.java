@@ -16,9 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
-import com.jiajian.obor.R;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
